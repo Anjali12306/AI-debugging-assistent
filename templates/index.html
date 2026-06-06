@@ -1,0 +1,174 @@
+{% extends "layout.html" %}
+
+{% block title %}AI Debugging Assistant{% endblock %}
+
+{% block content %}
+<main class="page-shell">
+    <section class="hero">
+        <div class="hero-copy">
+            <p class="eyebrow">AI + Flask Project</p>
+            <h1>Build confidence while debugging code.</h1>
+            <p class="intro">
+                Submit Python code and get a structured response with the issue, fix, explanation,
+                improvements, and time complexity guidance.
+            </p>
+            <div class="hero-metrics">
+                <article>
+                    <strong>01</strong>
+                    <span>Paste Python code</span>
+                </article>
+                <article>
+                    <strong>02</strong>
+                    <span>Get AI analysis</span>
+                </article>
+                <article>
+                    <strong>03</strong>
+                    <span>Learn and improve</span>
+                </article>
+            </div>
+        </div>
+        <div class="hero-panel">
+            <div class="panel-chip">Project Highlights</div>
+            <ul>
+                <li>Beginner-friendly explanations</li>
+                <li>Clear structured output</li>
+                <li>Optimization suggestions</li>
+                <li>Time complexity insight</li>
+            </ul>
+            <div class="hero-note">
+                <span>Live API Mode</span>
+                <p>This version is designed to connect directly to OpenAI for real debugging feedback.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="workspace">
+        <form method="POST" class="editor-card" id="debug-form">
+            <div class="section-heading">
+                <h2>Paste Your Code</h2>
+                <p>Choose a language, use a quick sample, or paste your own code snippet.</p>
+            </div>
+            <div class="language-row">
+                <label for="language" class="language-label">Language</label>
+                <select id="language" name="language" class="language-select">
+                    {% for language in ["Python", "C", "C++", "Java", "JavaScript"] %}
+                    <option value="{{ language }}" {% if selected_language == language %}selected{% endif %}>{{ language }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="sample-strip">
+                <button type="button" class="sample-button" data-sample="syntax">Syntax Error</button>
+                <button type="button" class="sample-button" data-sample="type">Type Error</button>
+                <button type="button" class="sample-button" data-sample="logic">Logic Mistake</button>
+            </div>
+            <div class="editor-toolbar">
+                <span class="editor-pill">{{ selected_language or "Python" }} Input</span>
+                <span class="editor-hint">Tip: short and medium snippets work best in live mode, while long inputs use optimized analysis.</span>
+            </div>
+            <label for="code" class="sr-only">Code input</label>
+            <textarea id="code" name="code" placeholder="def greet(name)
+    print('Hello ' + name)" required>{{ submitted_code }}</textarea>
+            <div class="form-actions">
+                <button type="submit" id="analyze-button">
+                    <span class="button-text">Analyze Code</span>
+                    <span class="button-loader" aria-hidden="true"></span>
+                </button>
+                <p class="submit-note">The assistant returns a fix, explanation, and improvement ideas.</p>
+            </div>
+        </form>
+
+        <section class="results-card">
+            {% if analysis %}
+            <div class="results-header">
+                <div class="section-heading">
+                    <h2>Structured Output</h2>
+                    <p>The result is formatted so users can learn from the error, not just fix it.</p>
+                </div>
+                <div class="badge-stack">
+                    <div class="mode-badge mode-{{ analysis.source|lower|replace(' ', '-') }}">{{ analysis.source }}</div>
+                    <div class="result-badge">{{ analysis.error_type }}</div>
+                </div>
+            </div>
+
+            <article class="status-banner">
+                <span>Current Status</span>
+                <p>{{ analysis.status }}</p>
+            </article>
+
+            <div class="result-grid">
+                <article>
+                    <span>Analysis Mode</span>
+                    <p>{{ analysis.source }}</p>
+                </article>
+                <article>
+                    <span>Language</span>
+                    <p>{{ analysis.language }}</p>
+                </article>
+                <article>
+                    <span>Request Mode</span>
+                    <p>{{ analysis.analysis_mode }}</p>
+                </article>
+                <article>
+                    <span>Error Type</span>
+                    <p>{{ analysis.error_type }}</p>
+                </article>
+                <article>
+                    <span>Issue</span>
+                    <p>{{ analysis.issue }}</p>
+                </article>
+                <article>
+                    <span>Solution</span>
+                    <p>{{ analysis.solution }}</p>
+                </article>
+                <article>
+                    <span>Explanation</span>
+                    <p>{{ analysis.explanation }}</p>
+                </article>
+                <article>
+                    <span>Time Complexity</span>
+                    <p>{{ analysis.time_complexity }}</p>
+                </article>
+            </div>
+
+            <div class="improvement-block">
+                <span>Suggested Improvements</span>
+                <ul>
+                    {% for item in analysis.improvements %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="code-block">
+                <div class="code-block-header">
+                    <span>Fixed Code</span>
+                    <button type="button" class="copy-button" data-copy-target="fixed-code">Copy</button>
+                </div>
+                <pre id="fixed-code">{{ analysis.fixed_code }}</pre>
+            </div>
+            {% else %}
+            <div class="section-heading">
+                <h2>Structured Output</h2>
+                <p>The result is formatted so users can learn from the error, not just fix it.</p>
+            </div>
+            <div class="empty-state">
+                <div class="empty-icon">{"}"</div>
+                <p>No analysis yet. Submit code to see the assistant response.</p>
+                <span>Expected output: issue, explanation, fixed code, improvements, and complexity.</span>
+            </div>
+            {% endif %}
+        </section>
+    </section>
+
+    <section class="demo-footer">
+        <article>
+            <span>Demo Flow</span>
+            <p>Show one syntax example, one logic example, then highlight how the app explains the fix in beginner-friendly language.</p>
+        </article>
+        <article>
+            <span>Project Value</span>
+            <p>This project combines Flask, prompt-based AI analysis, structured educational feedback, and resilient fallback behavior.</p>
+        </article>
+    </section>
+</main>
+{% endblock %}

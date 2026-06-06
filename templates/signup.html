@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block title %}Sign Up | AI Debugging Assistant{% endblock %}
+
+{% block content %}
+<main class="auth-shell">
+    <section class="auth-card">
+        <div class="section-heading">
+            <p class="eyebrow">Create Account</p>
+            <h1 class="auth-title">Start your AI-powered debugging workspace.</h1>
+            <p>Create a simple local account for this demo project and start analyzing code right away.</p>
+        </div>
+        <form method="POST" class="auth-form">
+            <label for="name">Full Name</label>
+            <input id="name" name="name" type="text" placeholder="Your name" value="{{ form_name or '' }}" required>
+
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="you@example.com" value="{{ form_email or '' }}" required>
+
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" placeholder="Minimum 6 characters" required>
+
+            <label for="confirm_password">Confirm Password</label>
+            <input id="confirm_password" name="confirm_password" type="password" placeholder="Re-enter password" required>
+
+            <button type="submit">Create Account</button>
+        </form>
+        <p class="auth-switch">Already have an account? <a href="{{ url_for('auth.login') }}">Login</a></p>
+    </section>
+</main>
+{% endblock %}

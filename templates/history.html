@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+
+{% block title %}History | AI Debugging Assistant{% endblock %}
+
+{% block content %}
+<main class="page-shell">
+    <section class="results-card">
+        <div class="section-heading">
+            <p class="eyebrow">Saved Analyses</p>
+            <h2>Analysis History</h2>
+            <p>Review previous debugging sessions saved for your account.</p>
+        </div>
+
+        {% if history_items %}
+        <div class="history-list">
+            {% for item in history_items %}
+            <article class="history-card">
+                <div class="history-meta">
+                    <div class="badge-stack">
+                        <div class="mode-badge mode-{{ item.source|lower|replace(' ', '-') }}">{{ item.source }}</div>
+                        <div class="result-badge">{{ item.error_type }}</div>
+                    </div>
+                    <span class="history-date">{{ item.created_at }}</span>
+                </div>
+                <div class="history-grid">
+                    <div>
+                        <span>Language</span>
+                        <p>{{ item.language }}</p>
+                    </div>
+                    <div>
+                        <span>Analysis Mode</span>
+                        <p>{{ item.analysis_mode }}</p>
+                    </div>
+                    <div>
+                        <span>Issue</span>
+                        <p>{{ item.issue }}</p>
+                    </div>
+                    <div>
+                        <span>Solution</span>
+                        <p>{{ item.solution }}</p>
+                    </div>
+                    <div>
+                        <span>Explanation</span>
+                        <p>{{ item.explanation }}</p>
+                    </div>
+                    <div>
+                        <span>Time Complexity</span>
+                        <p>{{ item.time_complexity }}</p>
+                    </div>
+                </div>
+                <div class="history-code-group">
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <span>Submitted Code</span>
+                        </div>
+                        <pre>{{ item.submitted_code }}</pre>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-block-header">
+                            <span>Suggested Fix</span>
+                        </div>
+                        <pre>{{ item.fixed_code }}</pre>
+                    </div>
+                </div>
+                <div class="improvement-block">
+                    <span>Suggested Improvements</span>
+                    <ul>
+                        {% for improvement in item.improvements %}
+                        <li>{{ improvement }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">[]</div>
+            <p>No analysis history yet.</p>
+            <span>Run your first debugging request to start building project history.</span>
+        </div>
+        {% endif %}
+    </section>
+</main>
+{% endblock %}

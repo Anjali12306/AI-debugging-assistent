@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: ai-debugging-assistant
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-5.4-mini
+      - key: OPENAI_TIMEOUT
+        value: "45"
+      - key: OPENAI_MAX_RETRIES
+        value: "2"
+      - key: OPENAI_MAX_OUTPUT_TOKENS
+        value: "450"
